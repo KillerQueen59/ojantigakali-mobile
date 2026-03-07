@@ -27,7 +27,7 @@ export interface ThemeConfig {
   name: string;
   colors: ThemeColors;
   menuItems: readonly ThemeMenuItem[];
-  title: { line1: string; line2: string; line3: string };
+  title: { line1: string; line2: string };
   footerText: string;
   loaderTitle: string;
   footerCharacters: readonly string[];

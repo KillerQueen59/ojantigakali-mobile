@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import NextImage from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 function ImageLightbox({
   images,
@@ -140,14 +141,14 @@ function ImageLightbox({
         {images.length > 1 && (
           <button
             onClick={prev}
-            className="bg-black/80 rounded-md w-9 h-9 cursor-pointer font-arcade text-[11px] flex items-center justify-center"
+            className="bg-black/80 rounded-md w-9 h-9 cursor-pointer flex items-center justify-center"
             style={{
               border: `1px solid ${color}55`,
               color,
               boxShadow: `0 0 8px ${color}33`,
             }}
           >
-            ◀
+            <ChevronLeft size={18} />
           </button>
         )}
 
@@ -169,14 +170,14 @@ function ImageLightbox({
         {images.length > 1 && (
           <button
             onClick={next}
-            className="bg-black/80 rounded-md w-9 h-9 cursor-pointer font-arcade text-[11px] flex items-center justify-center"
+            className="bg-black/80 rounded-md w-9 h-9 cursor-pointer flex items-center justify-center"
             style={{
               border: `1px solid ${color}55`,
               color,
               boxShadow: `0 0 8px ${color}33`,
             }}
           >
-            ▶
+            <ChevronRight size={18} />
           </button>
         )}
       </div>
@@ -281,26 +282,26 @@ export function ImageCarousel({
                   e.stopPropagation();
                   prev();
                 }}
-                className="absolute left-1.5 top-1/2 -translate-y-1/2 bg-black/70 rounded-[4px] w-7 h-7 cursor-pointer font-arcade text-[10px] flex items-center justify-center"
+                className="absolute left-1.5 top-1/2 -translate-y-1/2 bg-black/70 rounded-[4px] w-7 h-7 cursor-pointer flex items-center justify-center"
                 style={{
                   border: `1px solid ${color}55`,
                   color,
                 }}
               >
-                ◀
+                <ChevronLeft size={16} />
               </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   next();
                 }}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-black/70 rounded-[4px] w-7 h-7 cursor-pointer font-arcade text-[10px] flex items-center justify-center"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-black/70 rounded-[4px] w-7 h-7 cursor-pointer flex items-center justify-center"
                 style={{
                   border: `1px solid ${color}55`,
                   color,
                 }}
               >
-                ▶
+                <ChevronRight size={16} />
               </button>
             </>
           )}

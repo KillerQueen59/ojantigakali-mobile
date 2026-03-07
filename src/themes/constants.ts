@@ -70,7 +70,7 @@ export const pacmanTheme: ThemeConfig = {
       description: "Full character stats sheet",
     },
   ],
-  title: { line1: "OJANTIGAKALI'S", line2: "ARCADE", line3: "PORTFOLIO" },
+  title: { line1: "OJANTIGAKALI'S", line2: "ARCADE" },
   footerText: "TAP PAC-MAN TO CHOMP!",
   loaderTitle: "READY!",
   footerCharacters: ["#ff0000", "#ffb8ff", "#00ffff", "#ffb852"],

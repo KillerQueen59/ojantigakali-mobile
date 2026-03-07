@@ -23,7 +23,7 @@ export function MazeBorder({
         className="w-2.5 h-2.5 rounded-full shrink-0"
         style={{
           background: c.dot,
-          animation: `pelletBlink 0.6s step-end infinite${bottom ? " 0.3s" : ""}`,
+          animation: `pelletBlink 0.6s step-end infinite 0.3s`,
           boxShadow: `0 0 6px ${c.dot}`,
         }}
       />
@@ -40,7 +40,7 @@ export function MazeBorder({
         className="w-2.5 h-2.5 rounded-full shrink-0"
         style={{
           background: c.dot,
-          animation: `pelletBlink 0.6s step-end infinite ${bottom ? "0" : "0.3s"}`,
+          animation: `pelletBlink 0.6s step-end infinite 0s`,
           boxShadow: `0 0 6px ${c.dot}`,
         }}
       />

@@ -74,7 +74,6 @@ export function FooterInteraction({ theme }: { theme: ThemeConfig }) {
       </div>
 
       <div className="relative h-9" style={{ width: trackWidth }}>
-        {/* Hero character */}
         <div
           className={`absolute z-[2] ${isMoving ? "pacman-chomping" : ""}`}
           style={{
@@ -94,7 +93,6 @@ export function FooterInteraction({ theme }: { theme: ThemeConfig }) {
           <PacMan size={32} direction="right" />
         </div>
 
-        {/* Enemy characters */}
         {characters.map((col, i) => {
           const eaten = phase === "eating" && eatIndex >= i;
           const scared = phase === "eating" && eatIndex < i;

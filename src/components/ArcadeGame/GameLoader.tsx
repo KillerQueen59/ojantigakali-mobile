@@ -82,7 +82,7 @@ export function GameLoader({
         className="font-arcade text-[7px] tracking-[0.1em] mt-8"
         style={{ color: c.textDim }}
       >
-        © OJANTIGAKALI ARCADE PORTFOLIO
+        © OJANTIGAKALI ARCADE
       </div>
     </div>
   );

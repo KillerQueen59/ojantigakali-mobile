@@ -35,8 +35,6 @@ body::after {
   );
 }
 
-/* ── Animations ─────────────────────────────────────────────────── */
-
 @keyframes dotPulse {
   0%,
   100% {
@@ -244,8 +242,6 @@ body::after {
 .pacman-chomping .pacman-mouth {
   animation: pacChomp 0.2s linear infinite;
 }
-
-/* ── Donkey Kong theme animations ─────────────────────────────── */
 
 @keyframes barrelRoll {
   from {
