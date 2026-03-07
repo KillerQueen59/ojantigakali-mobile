@@ -1,0 +1,81 @@
+import { ThemeConfig, ThemeId } from "@/types/theme";
+
+export const pacmanTheme: ThemeConfig = {
+  id: "pacman",
+  name: "PAC-MAN",
+  colors: {
+    bg: "#000",
+    primary: "#ffcc00",
+    secondary: "#00ffff",
+    text: "#ffb8ae",
+    textDim: "#999",
+    wall: "#1919c1",
+    wallGlow: "#6666ff",
+    dot: "#ffb8ae",
+    score: "#ffcc00",
+  },
+  menuItems: [
+    {
+      id: "about",
+      label: "ABOUT ME",
+      subtitle: "1UP CHARACTER",
+      characterName: "BLINKY",
+      color: "#ff0000",
+      points: 200,
+      description: "The protagonist of the story",
+    },
+    {
+      id: "experience",
+      label: "EXPERIENCE",
+      subtitle: "LEVEL HISTORY",
+      characterName: "PINKY",
+      color: "#ffb8ff",
+      points: 400,
+      description: "Cleared stages & boss fights",
+    },
+    {
+      id: "projects",
+      label: "PROJECTS",
+      subtitle: "BONUS STAGES",
+      characterName: "INKY",
+      color: "#00ffff",
+      points: 800,
+      description: "Extra lives collected",
+    },
+    {
+      id: "education",
+      label: "EDUCATION",
+      subtitle: "SKILL TREE",
+      characterName: "CLYDE",
+      color: "#ffb852",
+      points: 1600,
+      description: "Abilities unlocked",
+    },
+    {
+      id: "contact",
+      label: "CONTACT",
+      subtitle: "BONUS FRUIT",
+      characterName: "CHERRY",
+      color: "#ff69b4",
+      points: 100,
+      description: "Connect & collaborate",
+    },
+    {
+      id: "resume",
+      label: "RESUME / CV",
+      subtitle: "POWER PELLET",
+      characterName: "EXTRA",
+      color: "#ffffff",
+      points: 5000,
+      description: "Full character stats sheet",
+    },
+  ],
+  title: { line1: "OJANTIGAKALI'S", line2: "ARCADE", line3: "PORTFOLIO" },
+  footerText: "TAP PAC-MAN TO CHOMP!",
+  loaderTitle: "READY!",
+  footerCharacters: ["#ff0000", "#ffb8ff", "#00ffff", "#ffb852"],
+};
+
+export const THEMES: Record<ThemeId, ThemeConfig> = {
+  pacman: pacmanTheme,
+};

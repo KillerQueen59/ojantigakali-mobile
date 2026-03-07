@@ -1,0 +1,398 @@
+@import "tailwindcss";
+
+@theme {
+  --font-arcade: var(--font-press-start), monospace;
+}
+
+:root {
+  --pac-black: #000000;
+  --pac-blue: #2121de;
+  --pac-yellow: #ffcc00;
+  --blinky: #ff0000;
+  --pinky: #ffb8ff;
+  --inky: #00ffff;
+  --clyde: #ffb852;
+  --bonus: #ff69b4;
+  --dot-color: #ffb8ae;
+  --wall-color: #1919c1;
+  --wall-border: #6666ff;
+}
+
+body {
+  @apply bg-[#111] overflow-x-hidden min-h-svh relative flex justify-center font-arcade;
+  color: var(--dot-color);
+}
+
+body::after {
+  @apply fixed inset-0 pointer-events-none z-[9999] max-w-[430px] mx-auto;
+  content: "";
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.04) 2px,
+    rgba(0, 0, 0, 0.04) 4px
+  );
+}
+
+/* ── Animations ─────────────────────────────────────────────────── */
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes pelletBlink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ghostFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes neonGlow {
+  0%,
+  100% {
+    text-shadow:
+      0 0 4px currentColor,
+      0 0 14px currentColor;
+  }
+  50% {
+    text-shadow:
+      0 0 8px currentColor,
+      0 0 28px currentColor,
+      0 0 50px currentColor;
+  }
+}
+
+@keyframes pacEat {
+  0%,
+  100% {
+    d: path("M16,16 L30,9 L30,23 Z");
+  }
+  50% {
+    d: path("M16,16 L30,16 L30,16 Z");
+  }
+}
+
+@keyframes insertCoin {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes panelIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes panelOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes ghostEaten {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(1.4) translateY(-8px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(0.2) translateY(-20px);
+    opacity: 0;
+  }
+}
+
+@keyframes ghostEatenOverlay {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.3);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes scoreFloat {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+}
+
+@keyframes mazeFlicker {
+  0%,
+  96%,
+  98%,
+  100% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes titleFlicker {
+  0%,
+  18%,
+  20%,
+  55%,
+  57%,
+  100% {
+    opacity: 1;
+  }
+  19%,
+  56% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes loaderPacMove {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(270px);
+  }
+}
+
+@keyframes loaderGhostEaten {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(1.3) translateY(-6px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0) translateY(-16px);
+    opacity: 0;
+  }
+}
+
+@keyframes pacChomp {
+  0%,
+  100% {
+    d: path("M16,16 L30,8.5 L30,23.5 Z");
+  }
+  50% {
+    d: path("M16,16 L30,16 L30,16 Z");
+  }
+}
+
+.pacman-chomping .pacman-mouth {
+  animation: pacChomp 0.2s linear infinite;
+}
+
+/* ── Donkey Kong theme animations ─────────────────────────────── */
+
+@keyframes barrelRoll {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes barrelBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes marioJump {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-18px);
+  }
+  50% {
+    transform: translateY(-22px);
+  }
+  80% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes girderShine {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes loaderBarrelRoll {
+  from {
+    transform: translateX(280px) rotate(0deg);
+  }
+  to {
+    transform: translateX(-40px) rotate(-720deg);
+  }
+}
+
+@keyframes loaderMarioJump {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-24px);
+  }
+}
+
+@keyframes hammerSwing {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-45deg);
+  }
+  75% {
+    transform: rotate(45deg);
+  }
+}
+
+@keyframes dkPound {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.05);
+  }
+}
+
+@keyframes fireFlicker {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scaleY(0.9);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes lightboxIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lightboxOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes lightboxImgIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes lightboxImgOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
