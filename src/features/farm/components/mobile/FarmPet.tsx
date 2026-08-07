@@ -1,70 +1,45 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { ZoneId } from '../../data/cards'
+import { PETS } from '../../data/pets'
 import PixelSprite from '../PixelSprite'
 
-// Side-view chicken (faces right; flipped for leftward walking). Authored with the
-// pixel-art grid method — comb + beak + wattle on the right, tail on the left.
-const CHICK_ROWS = [
-  '.......R.R.R....',
-  '.K.....RRRRR....',
-  '.KK..KKKKKKKK...',
-  '.KWKKKWWWWWWWWK.',
-  '.KWWWWWWWWWWEWKO',
-  '.KWWWWWWWWWWWWKR',
-  '.KWWWWWWWWWWWWK.',
-  '..KwWWWWWWWWwK..',
-  '..KwWWWWWWWWwK..',
-  '...KKKKKKKKKK...',
-  '.....K....K.....',
-  '.....O....O.....',
-  '.....O....O.....',
-  '...OOO....OOO...',
-]
-const CHICK_PALETTE: Record<string, string> = {
-  '.': 'transparent',
-  K: '#2b2028',
-  W: '#ffffff',
-  w: '#d6d6e0',
-  R: '#e42217',
-  O: '#ffa300',
-  E: '#000000',
+type Mode = 'idle' | 'move' | 'hop'
+
+const LABEL: Record<ZoneId, string> = {
+  coop: 'chicken',
+  barn: 'cow',
+  crop: 'rabbit',
+  orchard: 'butterfly',
 }
 
-type Mode = 'idle' | 'walk' | 'hop'
-
-// Tap reactions — hearts weighted highest.
-const EMOTES = [
-  { ch: '♥', color: '#e74c3c' },
-  { ch: '♥', color: '#e74c3c' },
-  { ch: '♪', color: '#3e6fa8' },
-  { ch: '✦', color: '#f2c14e' },
-]
-
 /**
- * A Talk-Tom / Pou-style pet: wanders the farm on its own, faces where it's going,
- * and reacts to taps with a squash-hop and floating hearts. Lives as an absolute
- * overlay above the farm scene.
+ * A Talk-Tom / Pou-style pet, one per farm place. Ground critters (chicken, cow,
+ * rabbit) wander a lane and face where they're going; the orchard butterfly roams
+ * in 2D. All idle/breathe and react to taps with a squash-hop + floating emote.
+ * Give it a `key={zone}` so switching places gives a clean new critter.
  */
-export default function FarmPet({ pixel = 3 }: { pixel?: number }) {
-  const [x, setX] = useState(28) // horizontal position, % of the lane
+export default function FarmPet({ zone }: { zone: ZoneId }) {
+  const pet = PETS[zone]
+  const [x, setX] = useState(pet.flies ? 24 : 28) // % across the lane
+  const [y, setY] = useState(30) // % up (flyers only)
   const [facing, setFacing] = useState<1 | -1>(1)
   const [mode, setMode] = useState<Mode>('idle')
-  const [dur, setDur] = useState(3) // seconds for the current stroll
+  const [dur, setDur] = useState(3)
   const [emotes, setEmotes] = useState<{ id: number; ch: string; color: string }[]>([])
 
   const timers = useRef<ReturnType<typeof setTimeout>[]>([])
-  const heartId = useRef(0)
+  const emoteId = useRef(0)
   const xRef = useRef(x)
   xRef.current = x
-  const petting = useRef(false)
+  const busy = useRef(false)
 
   const track = (t: ReturnType<typeof setTimeout>) => {
     timers.current.push(t)
     return t
   }
 
-  // Autonomous wander loop: idle a beat, stroll to a new spot, repeat.
   useEffect(() => {
     let active = true
     const stroll = () => {
@@ -73,20 +48,22 @@ export default function FarmPet({ pixel = 3 }: { pixel?: number }) {
       track(
         setTimeout(
           () => {
-            if (!active || petting.current) {
+            if (!active || busy.current) {
               track(setTimeout(stroll, 600))
               return
             }
             const from = xRef.current
-            const target = 8 + Math.random() * 76 // keep inside 8–84%
+            const target = (pet.flies ? 10 : 8) + Math.random() * (pet.flies ? 70 : 76)
             const dist = Math.abs(target - from)
             setFacing(target >= from ? 1 : -1)
-            setDur(Math.max(1.2, dist * 0.06))
+            const seconds = Math.max(1, dist * pet.speed)
+            setDur(seconds)
             setX(target)
-            setMode('walk')
-            track(setTimeout(stroll, Math.max(1200, dist * 60)))
+            if (pet.flies) setY(18 + Math.random() * 40)
+            setMode('move')
+            track(setTimeout(stroll, Math.max(1100, seconds * 1000)))
           },
-          700 + Math.random() * 1700,
+          600 + Math.random() * 1600,
         ),
       )
     }
@@ -96,41 +73,48 @@ export default function FarmPet({ pixel = 3 }: { pixel?: number }) {
       timers.current.forEach(clearTimeout)
       timers.current = []
     }
-  }, [])
+  }, [pet])
 
-  const pet = useCallback(() => {
-    petting.current = true
+  const play = useCallback(() => {
+    busy.current = true
     setMode('hop')
-    const id = ++heartId.current
-    const emote = EMOTES[Math.floor(Math.random() * EMOTES.length)]
-    setEmotes((e) => [...e, { id, ...emote }])
-    track(setTimeout(() => setEmotes((e) => e.filter((v) => v.id !== id)), 900))
+    const id = ++emoteId.current
+    const e = pet.emotes[Math.floor(Math.random() * pet.emotes.length)]
+    setEmotes((v) => [...v, { id, ...e }])
+    track(setTimeout(() => setEmotes((v) => v.filter((k) => k.id !== id)), 900))
     track(
       setTimeout(() => {
         setMode((m) => (m === 'hop' ? 'idle' : m))
-        petting.current = false
-      }, 440),
+        busy.current = false
+      }, 460),
     )
-  }, [])
+  }, [pet])
 
-  const animation =
-    mode === 'walk'
-      ? 'farm-petWalk .5s ease-in-out infinite'
-      : mode === 'hop'
-        ? 'farm-petHop .44s ease-out'
+  const animation = pet.flies
+    ? mode === 'hop'
+      ? 'farm-petHop .44s ease-out'
+      : 'farm-flutter 1.3s ease-in-out infinite'
+    : mode === 'hop'
+      ? 'farm-petHop .44s ease-out'
+      : mode === 'move'
+        ? pet.move === 'hop'
+          ? 'farm-petHopLoop .6s ease-in-out infinite'
+          : 'farm-petWalk .5s ease-in-out infinite'
         : 'farm-petIdle 2.4s ease-in-out infinite'
 
   return (
     <button
       type="button"
-      aria-label="Pet the chicken"
-      onClick={pet}
+      aria-label={`Play with the ${LABEL[zone]}`}
+      onClick={play}
       style={{
         position: 'absolute',
-        bottom: '7%',
+        bottom: pet.flies ? `${y}%` : `${pet.bottom}%`,
         left: `${x}%`,
         transform: 'translateX(-50%)',
-        transition: `left ${dur}s linear`,
+        transition: pet.flies
+          ? `left ${dur}s ease-in-out, bottom ${dur}s ease-in-out`
+          : `left ${dur}s linear`,
         border: 0,
         background: 'transparent',
         padding: 10,
@@ -157,10 +141,9 @@ export default function FarmPet({ pixel = 3 }: { pixel?: number }) {
             {e.ch}
           </span>
         ))}
-        {/* facing flip on the outer layer, the mode animation on the inner, so they compose */}
         <div style={{ transform: `scaleX(${facing})`, transformOrigin: 'center bottom' }}>
           <div style={{ animation, transformOrigin: 'center bottom' }}>
-            <PixelSprite rows={CHICK_ROWS} palette={CHICK_PALETTE} pixel={pixel} />
+            <PixelSprite rows={pet.rows} palette={pet.palette} pixel={pet.pixel} />
           </div>
         </div>
       </div>

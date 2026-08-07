@@ -180,7 +180,7 @@ function MobileFarm() {
             <rect key={i} x={r[0]} y={r[1]} width={r[2]} height={r[3]} fill={r[4]} />
           ))}
         </MobileFarmBase>
-        <FarmPet />
+        <FarmPet key={zone.id} zone={zone.id} />
       </div>
 
       {/* page dots */}
