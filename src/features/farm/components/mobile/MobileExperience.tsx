@@ -10,6 +10,7 @@ import MobileBanner from '../art/MobileBanner'
 import MobileFarmBase from '../art/MobileFarmBase'
 import Meter from '../Meter'
 import { HarvestModal, ShareModal, Toast } from '../Modals'
+import FarmPet from './FarmPet'
 
 const title = 'var(--farm-font-title)'
 const mono = 'var(--farm-font-mono)'
@@ -172,12 +173,15 @@ function MobileFarm() {
         <span style={{ fontFamily: mono, fontSize: 9, color: '#D9C49A' }}>{farmPage + 1} OF 4</span>
       </div>
 
-      {/* scene */}
-      <MobileFarmBase style={{ display: 'block', width: '100%', height: 'auto' }}>
-        {MOBILE_SCENES[zone.id].map((r, i) => (
-          <rect key={i} x={r[0]} y={r[1]} width={r[2]} height={r[3]} fill={r[4]} />
-        ))}
-      </MobileFarmBase>
+      {/* scene + wandering pet */}
+      <div style={{ position: 'relative', lineHeight: 0 }}>
+        <MobileFarmBase style={{ display: 'block', width: '100%', height: 'auto' }}>
+          {MOBILE_SCENES[zone.id].map((r, i) => (
+            <rect key={i} x={r[0]} y={r[1]} width={r[2]} height={r[3]} fill={r[4]} />
+          ))}
+        </MobileFarmBase>
+        <FarmPet />
+      </div>
 
       {/* page dots */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, padding: '10px 0' }}>
