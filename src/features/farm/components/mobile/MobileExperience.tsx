@@ -82,13 +82,13 @@ function MobileHome() {
       {/* sky banner → opens farm */}
       <button type="button" onClick={farmActions.openFarm} style={{ position: 'relative', border: 0, padding: 0, cursor: 'pointer', display: 'block', lineHeight: 0 }}>
         <MobileBanner style={{ display: 'block', width: '100%', height: 'auto' }} />
-        <span style={{ position: 'absolute', bottom: 10, left: 12, background: '#4A2F18', color: '#F6E7C5', fontFamily: title, fontSize: 14, padding: '3px 10px', animation: 'farm-bob 1.6s ease-in-out infinite' }}>
+        <span style={{ position: 'absolute', top: 10, left: 12, background: '#4A2F18', color: '#F6E7C5', fontFamily: title, fontSize: 14, padding: '3px 10px', animation: 'farm-bob 1.6s ease-in-out infinite' }}>
           VISIT THE FARM ↓
         </span>
       </button>
 
-      {/* hero widget */}
-      <div style={{ margin: '-42px 16px 0', background: '#8B5A2B', padding: 4, boxShadow: `3px 3px 0 rgba(0,0,0,.35), ${bevelOut}` }}>
+      {/* hero widget — positioned above the banner so it overlaps cleanly */}
+      <div style={{ position: 'relative', zIndex: 1, margin: '-42px 16px 0', background: '#8B5A2B', padding: 4, boxShadow: `3px 3px 0 rgba(0,0,0,.35), ${bevelOut}` }}>
         <div style={{ background: '#F6E7C5', padding: '12px 14px', boxShadow: 'inset 0 0 0 2px #D9C49A', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
             <div style={{ fontFamily: title, fontSize: 38, color: '#3B2A1A', lineHeight: 1 }}>{clock}</div>
