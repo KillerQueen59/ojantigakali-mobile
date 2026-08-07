@@ -61,6 +61,7 @@ function Tile({ section, size, showLabel }: { section: (typeof SECTIONS)[number]
   return (
     <button
       type="button"
+      className="farm-tile"
       onClick={() => (locked ? farmActions.lockedToast() : farmActions.openApp(section.id!))}
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, border: 0, background: 'transparent', cursor: 'pointer', padding: 0 }}
     >
@@ -129,7 +130,7 @@ function MobileHome() {
         {(['contact', 'resume', 'github'] as const).map((id) => {
           const s = SECTIONS.find((x) => x.id === id)!
           return (
-            <button key={id} type="button" onClick={() => farmActions.openApp(id)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, border: 0, background: 'transparent', cursor: 'pointer' }}>
+            <button key={id} type="button" className="farm-tile" onClick={() => farmActions.openApp(id)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, border: 0, background: 'transparent', cursor: 'pointer' }}>
               <span style={{ width: 48, height: 48, display: 'grid', placeItems: 'center', background: '#6E4523', boxShadow: bevelOut }}>
                 <Icon href={s.icon} size={26} />
               </span>
