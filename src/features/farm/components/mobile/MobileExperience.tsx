@@ -10,6 +10,7 @@ import MobileBanner from '../art/MobileBanner'
 import MobileFarmBase from '../art/MobileFarmBase'
 import Meter from '../Meter'
 import { HarvestModal, ShareModal, Toast } from '../Modals'
+import TendBurst, { useZoneTend } from '../TendBurst'
 import FarmPet from './FarmPet'
 
 const title = 'var(--farm-font-title)'
@@ -158,6 +159,7 @@ function MobileFarm() {
   const value = useFarm((s) => s.meters[zone.id])
   const tended = useFarm((s) => !!s.tended[zone.id])
   const helped = useFarm((s) => s.helped)
+  const pulse = useZoneTend(zone.id)
   const full = value >= 50
   const chipBg = full ? '#F2C14E' : tended ? '#D9C49A' : zone.chip
   const chipFg = full || tended ? '#3B2A1A' : '#FFF'
@@ -199,19 +201,22 @@ function MobileFarm() {
 
       {/* zone panel */}
       <div style={{ margin: '12px 16px 0', background: '#8B5A2B', padding: 4, boxShadow: `3px 3px 0 rgba(0,0,0,.35), ${bevelOut}` }}>
-        <div style={{ background: '#F6E7C5', padding: '14px 16px', boxShadow: 'inset 0 0 0 2px #D9C49A' }}>
+        <div style={{ position: 'relative', background: '#F6E7C5', padding: '14px 16px', boxShadow: 'inset 0 0 0 2px #D9C49A' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
             <span style={{ fontFamily: title, fontSize: 22, color: '#3B2A1A' }}>{zone.name}</span>
             <span style={{ fontFamily: mono, fontSize: 12, color: '#6E4523' }}>{value}/50</span>
           </div>
           <div style={{ fontFamily: mono, fontSize: 11, color: '#6E4523', margin: '2px 0 10px' }}>{zone.sub}</div>
-          <Meter value={value} color={full ? '#F2C14E' : zone.chip} />
+          <div key={pulse} style={{ transformOrigin: 'left center', animation: pulse ? 'farm-tendPulse .32s ease-out' : undefined }}>
+            <Meter value={value} color={full ? '#F2C14E' : zone.chip} />
+          </div>
           <p style={{ fontFamily: body, fontSize: 14, lineHeight: 1.5, color: '#3B2A1A', margin: '10px 0 0' }}>{copy}</p>
+          <TendBurst zone={zone.id} />
         </div>
       </div>
 
       {/* action */}
-      <button type="button" onClick={() => farmActions.tend(zone.id, zone.name)} style={{ margin: '16px 16px 0', minHeight: 48, border: 0, cursor: 'pointer', background: chipBg, color: chipFg, fontFamily: title, fontSize: 20, padding: 14, boxShadow: '3px 3px 0 rgba(0,0,0,.3)', animation: full ? 'farm-bob 1s ease-in-out infinite' : undefined }}>
+      <button type="button" className="farm-action" onClick={() => farmActions.tend(zone.id, zone.name)} style={{ margin: '16px 16px 0', minHeight: 48, border: 0, cursor: 'pointer', background: chipBg, color: chipFg, fontFamily: title, fontSize: 20, padding: 14, boxShadow: '3px 3px 0 rgba(0,0,0,.3)', animation: full ? 'farm-bob 1s ease-in-out infinite' : undefined }}>
         {chipLabel}
       </button>
 

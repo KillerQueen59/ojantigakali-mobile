@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ZoneId } from '../../data/cards'
 import { PETS } from '../../data/pets'
 import PixelSprite from '../PixelSprite'
+import { useZoneTend } from '../TendBurst'
 
 type Mode = 'idle' | 'move' | 'hop'
 
@@ -89,6 +90,12 @@ export default function FarmPet({ zone }: { zone: ZoneId }) {
       }, 460),
     )
   }, [pet])
+
+  // Cheer when this place gets tended.
+  const cheered = useZoneTend(zone)
+  useEffect(() => {
+    if (cheered > 0) play()
+  }, [cheered, play])
 
   const animation = pet.flies
     ? mode === 'hop'
