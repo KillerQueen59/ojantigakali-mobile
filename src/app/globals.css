@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./farm.css";
 
 @theme {
   --font-arcade: var(--font-press-start), monospace;

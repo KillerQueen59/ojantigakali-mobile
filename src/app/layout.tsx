@@ -1,5 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Press_Start_2P } from "next/font/google";
+import {
+  Press_Start_2P,
+  Pixelify_Sans,
+  Nunito,
+  IBM_Plex_Mono,
+} from "next/font/google";
 import "./globals.css";
 
 const pressStart = Press_Start_2P({
@@ -8,10 +13,25 @@ const pressStart = Press_Start_2P({
   variable: "--font-press-start",
   display: "swap",
 });
+const pixelify = Pixelify_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-pixelify",
+});
+const nunito = Nunito({
+  weight: ["400", "600", "700", "800"],
+  subsets: ["latin"],
+  variable: "--font-nunito",
+});
+const plexMono = IBM_Plex_Mono({
+  weight: ["400", "600"],
+  subsets: ["latin"],
+  variable: "--font-plex-mono",
+});
 
 export const metadata: Metadata = {
-  title: "Ojantigakali's Arcade",
-  description: "Insert coin to explore the portfolio — mobile arcade edition.",
+  title: "OJAN.FARM — Muhammad Fauzan Ramadhan",
+  description: "A software engineer's portfolio, tended as a Stardew Valley farm.",
   icons: { icon: "/ojantigakali-animated-round.gif" },
 };
 
@@ -29,7 +49,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${pressStart.variable} h-full`}>{children}</body>
+      <body
+        className={`${pressStart.variable} ${pixelify.variable} ${nunito.variable} ${plexMono.variable} h-full`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
