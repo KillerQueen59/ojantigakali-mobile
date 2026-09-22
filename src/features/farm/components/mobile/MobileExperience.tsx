@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { CATALOG } from '../../data/cards'
 import { WINDOW_CONTENT } from '../../data/content'
 import { MOBILE_SCENES, SECTIONS, ZONE_ORDER, ZONES } from '../../data/zones'
-import { farmActions, useFarm } from '../../state/farmStore'
+import { cooldownLeft, farmActions, useFarm } from '../../state/farmStore'
 import IconSymbols from '../art/IconSymbols'
 import MobileBanner from '../art/MobileBanner'
 import MobileFarmBase from '../art/MobileFarmBase'
@@ -157,13 +157,14 @@ function MobileFarm() {
   const farmPage = useFarm((s) => s.farmPage)
   const zone = ZONES[farmPage]
   const value = useFarm((s) => s.meters[zone.id])
-  const tended = useFarm((s) => !!s.tended[zone.id])
+  const cdLeft = useFarm((s) => cooldownLeft(s, zone.id))
   const helped = useFarm((s) => s.helped)
   const pulse = useZoneTend(zone.id)
   const full = value >= 50
-  const chipBg = full ? '#F2C14E' : tended ? '#D9C49A' : zone.chip
-  const chipFg = full || tended ? '#3B2A1A' : '#FFF'
-  const chipLabel = full ? '⭐ HARVEST!' : tended ? '✓ TENDED · COME BACK LATER' : `${zone.action} +1`
+  const cooling = !full && cdLeft > 0
+  const chipBg = full ? '#F2C14E' : cooling ? '#D9C49A' : zone.chip
+  const chipFg = full || cooling ? '#3B2A1A' : '#FFF'
+  const chipLabel = full ? '⭐ HARVEST!' : cooling ? `⏳ COOLDOWN · ${cdLeft}s` : `${zone.action} +1`
   const copy = full
     ? 'The meter is full! Tap harvest to claim what everyone grew together.'
     : `${50 - value} more and it’s ready. Every visitor’s action counts — this place is shared by everyone who stops by.`
@@ -216,7 +217,7 @@ function MobileFarm() {
       </div>
 
       {/* action */}
-      <button type="button" className="farm-action" onClick={() => farmActions.tend(zone.id, zone.name)} style={{ margin: '16px 16px 0', minHeight: 48, border: 0, cursor: 'pointer', background: chipBg, color: chipFg, fontFamily: title, fontSize: 20, padding: 14, boxShadow: '3px 3px 0 rgba(0,0,0,.3)', animation: full ? 'farm-bob 1s ease-in-out infinite' : undefined }}>
+      <button type="button" className="farm-action" onClick={() => farmActions.tend(zone.id, zone.name)} disabled={cooling} style={{ margin: '16px 16px 0', minHeight: 48, border: 0, cursor: cooling ? 'not-allowed' : 'pointer', opacity: cooling ? 0.85 : 1, background: chipBg, color: chipFg, fontFamily: title, fontSize: 20, padding: 14, boxShadow: '3px 3px 0 rgba(0,0,0,.3)', animation: full ? 'farm-bob 1s ease-in-out infinite' : undefined }}>
         {chipLabel}
       </button>
 
@@ -247,15 +248,42 @@ function MobileApp() {
   )
 }
 
+function SyncStrip() {
+  const account = useFarm((s) => s.account)
+  const user = account?.kind === 'user'
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, background: '#EBD7A9', padding: '7px 16px' }}>
+      <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: mono, fontSize: 9, letterSpacing: '.06em', color: user ? '#4A2F18' : '#8B5A2B' }}>
+        {user && account?.avatarUrl && (
+          <img src={account.avatarUrl} alt="" width={16} height={16} style={{ imageRendering: 'pixelated', borderRadius: 2 }} />
+        )}
+        {user ? `SYNCED · ${account?.displayName ?? 'GITHUB'}` : 'GUEST · CARDS SAVED TO THIS DEVICE'}
+      </span>
+      <button
+        type="button"
+        onClick={user ? farmActions.signOut : farmActions.signIn}
+        style={{ border: 0, cursor: 'pointer', background: user ? '#8B5A2B' : '#2B2B2B', color: '#F6E7C5', fontFamily: title, fontSize: 11, padding: '4px 10px', boxShadow: '2px 2px 0 rgba(0,0,0,.3)', whiteSpace: 'nowrap' }}
+      >
+        {user ? 'SIGN OUT' : 'SYNC · GITHUB'}
+      </button>
+    </div>
+  )
+}
+
 export default function MobileExperience() {
   const mScreen = useFarm((s) => s.mScreen)
   const win = useFarm((s) => s.win)
   const screen = mScreen === 'farm' ? 'farm' : mScreen === 'app' && win ? 'app' : 'home'
+
+  useEffect(() => {
+    void farmActions.bootstrap()
+  }, [])
   return (
     <div style={{ background: '#2A2118', minHeight: '100dvh', display: 'flex', justifyContent: 'center' }}>
       <IconSymbols />
       <div style={{ width: '100%', maxWidth: 440, minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: '#F6E7C5', overflow: 'hidden', position: 'relative' }}>
         <StatusStrip />
+        {screen === 'home' && <SyncStrip />}
         {screen === 'home' && <MobileHome />}
         {screen === 'farm' && <MobileFarm />}
         {screen === 'app' && <MobileApp />}

@@ -32,7 +32,7 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "OJAN.FARM — Muhammad Fauzan Ramadhan",
   description: "A software engineer's portfolio, tended as a Stardew Valley farm.",
-  icons: { icon: "/ojantigakali-animated-round.gif" },
+  icons: { icon: "/farm-chicken-icon.png" },
 };
 
 export const viewport: Viewport = {
